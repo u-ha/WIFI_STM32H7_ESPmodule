@@ -1,0 +1,2347 @@
+﻿$version 11.00
+
+// This is the root component of the entire GUI application.
+$rect <20,20,220,60>
+$output false
+class Application : Core::Root
+{
+  $rect <470,460,670,500>
+  inherited method Init()
+  {
+    // TO DO: Write your code here ... 
+
+    STEPControl();
+
+    //InvalidateViewState();
+  }
+
+  $rect <0,300,200,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  // To do:
+  // 
+  // - The simplest way to compose the appearance of the application is to use the \
+  // 'Views' and 'Widgets' from the Gallery.
+  // 
+  // - To react to touch or keyboard events use the templates from the Gallery folder \
+  // 'Event Handlers'.
+  // 
+  // - To perform transitions (animations) use the templates from the Gallery folder \
+  // 'Effects'.
+  // 
+  // - To store values use the 'Variable', 'Array' and 'Property' templates available \
+  // in the Gallery folder 'Chora'.
+  // 
+  // - To implement behavior use the 'Method' and 'Slot Method' templates available \
+  // in the Gallery folder 'Chora'.
+  note legend Note1
+  {
+    attr Bounds = <-30,550,750,750>;
+  }
+
+  $rect <480,330,680,370>
+  var Application::Panel LeftLabel = null;
+
+  $rect <680,330,880,370>
+  var Application::Panel MainLabel = null;
+
+  $rect <880,330,1080,370>
+  var Application::Panel RightLabel = null;
+
+  $rect <680,370,880,410>
+  var Application::Panel SlideLabel = null;
+
+  $rect <240,320,440,360>
+  property int32 STEP_Status = 1;
+
+  $rect <0,350,200,390>
+  slot STEP1_Slot
+  {
+    //sender; /* the method is called from the sender object */
+
+    STEP_Status = 2;
+    STEPControl();
+  }
+
+  $rect <0,390,200,430>
+  slot STEP2_1Slot
+  {
+    //sender; /* the method is called from the sender object */
+    STEP_Status = 1;
+    STEPControl();
+  }
+
+  $rect <0,430,200,470>
+  slot STEP2_2Slot
+  {
+    //sender; /* the method is called from the sender object */
+    STEP_Status = 3;
+    STEPControl();
+  }
+
+  $rect <0,470,200,510>
+  slot STEP3_Slot
+  {
+    //sender; /* the method is called from the sender object */
+    STEPControl();
+  }
+
+  $rect <240,360,440,400>
+  onset STEP_Status
+  {
+    // The value doesn't change - nothing to do.
+    if ( pure STEP_Status == value )
+      return;
+
+    // Remember the property's new value.
+    pure STEP_Status = value;
+
+    // TO DO:
+    // 
+    // Now you can handle the alternation of the property.
+  }
+
+  $rect <240,400,440,440>
+  onget STEP_Status
+  {
+    return pure STEP_Status;
+  }
+
+  $rect <20,20,160,60>
+  object Core::Outline Outline
+  {
+    preset Bounds = <0,0,480,272>;
+  }
+
+  // This function returns the number of days in the month and year specified in \
+  // the method parameters aMonth and aYear. The function takes care of the February \
+  // and its dependency of the leap year.
+  $rect <230,460,430,500>
+  method void STEPControl()
+  {
+    /* remove all current panels */
+
+    /*
+    Application::Panel STEP1_Temp = new Application::STEP1;
+    Application::Panel STEP2_Temp = new Application::STEP2;
+    Application::Panel STEP3_Temp = new Application::STEP3;
+
+    STEP1_Temp.OnNext = STEP1_Slot;
+    STEP2_Temp.OnPrev = STEP2_1Slot;
+    STEP2_Temp.OnNext = STEP2_2Slot;
+    STEP3_Temp.OnPrev = STEP1_Slot;
+    */
+
+    if ( LeftLabel != null )
+    {
+      Remove( LeftLabel );
+      LeftLabel = null;
+    }
+    if ( MainLabel != null )
+    {
+      Remove( MainLabel );
+      MainLabel = null;
+    }
+    if ( RightLabel != null )
+    {
+      Remove( RightLabel );
+      RightLabel = null;
+    }
+
+    if(STEP_Status == 1)
+    {
+      LeftLabel = new Application::STEP2;
+      MainLabel = new Application::STEP1;
+      RightLabel = new Application::STEP2;
+
+      MainLabel.OnNext = STEP1_Slot;
+    }
+    else if(STEP_Status == 2)
+    {
+      LeftLabel = new Application::STEP1;
+      MainLabel = new Application::STEP2;
+      RightLabel = new Application::STEP3;
+
+      MainLabel.OnPrev = STEP2_1Slot;
+      MainLabel.OnNext = STEP2_2Slot;
+
+      //MainLabel.GetRoot().VirtualKeyboard = MainLabel.
+
+    }
+    else if(STEP_Status == 3)
+    {
+      LeftLabel = new Application::STEP2;
+      MainLabel = new Application::STEP3;
+      RightLabel = new Application::STEP2;
+
+      MainLabel.OnPrev = STEP1_Slot;
+    }
+
+
+     
+    /* create new left/right neighbours depending on type of center panel */
+    /*
+    if (( Application::AIR_Screen)aCenterPanel != null )
+    {
+      LeftPanel  = new Application::Setup_Screen;
+      RightPanel = new Application::Setup_Screen;
+      Application::Device.PageNo = 1;
+    }
+    else if (( Application::Setup_Screen)aCenterPanel != null )
+    {
+      LeftPanel  = new Application::AIR_Screen;
+      RightPanel = new Application::AIR_Screen;
+      Application::Device.PageNo = 2;
+    }
+    */ 
+    /* store the center panel */
+    //CenterPanel = aCenterPanel;
+
+    /* now arrange the three panels and reset the outline */
+    LeftLabel.Bounds = <-480,0,0,272>;
+    MainLabel.Bounds = <0,0,480,272>;
+    RightLabel.Bounds = <480,0,960,272>;
+    Outline.ScrollOffset = <0,0>;
+
+    /* set all three panels to embedded in order to arrange them by the outline box */
+    LeftLabel.Embedded = true;
+    MainLabel.Embedded = true;
+    //MainLabel.Visible = true;
+    RightLabel.Embedded = true;
+
+    AddBehind(LeftLabel, SlideLabel);
+    AddBehind(MainLabel, SlideLabel);
+    AddBehind(RightLabel, SlideLabel);
+
+    /* add the three panels to this UI component */
+    //AddBehind(LeftPanel, SlidePanel);
+    //AddBehind(CenterPanel, SlidePanel);
+    //AddBehind(RightPanel, SlidePanel);
+  }
+}
+
+// To do:
+// 
+// - Open the 'Application' component for editing. It represents your entire GUI. \
+// Use widgets, views, event handlers and effects from the Gallery to assemble there \
+// your desired GUI look and feel.
+// 
+// - Create your own GUI components, widgets, panels, etc. The Gallery folder 'Component \
+// Templates' contains for this purpose various templates you can simply add to the \
+// unit and thus start your own component development.
+// 
+// - You can add your own bitmap and font resources to the unit. Use the templates \
+// 'Bitmap Resource' and 'Font Resource' from the Gallery folder 'Resources' for \
+// this purpose.
+// 
+// - You can add here also constants to store e.g. multilingual text fragments. Use \
+// for this purpose the template 'Constant' from the Gallery folder 'Chora'.
+// 
+// - To add an interface for communication with the target device use the template \
+// 'Device Interface' from the Gallery folder 'Device'.
+note legend Note1
+{
+  attr Bounds = <20,240,710,550>;
+}
+
+// This is a font resource.
+$rect <230,20,430,60>
+$output false
+resource Resources::Font Font
+{
+  attr fontname FontName = Arial;
+  attr fontheight Height = 32;
+  attr fontquality Quality = High;
+  attr fontranges Ranges = 0x20-0xFF;
+  attr fontaspectratio AspectRatio = 1.0;
+  attr fontbold Bold = false;
+  attr fontitalic Italic = false;
+  attr fontkerning Kerning = true;
+  attr fontheightmode HeightMode = Compatible;
+  attr fontrowdistance RowDistance;
+}
+
+$rect <80,70,280,110>
+$output false
+class STEP1 : Application::Panel
+{
+  $rect <20,300,220,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  $rect <10,390,210,430>
+  inherited method UpdateLayout()
+  {
+    // Always invoke the inherited method.
+    super( aSize );
+
+    /*
+
+      HINT:
+
+      This method exists for sophisticated layout calculation. Please note, that in 
+      most cases it is completely sufficient to use the views property 'Layout' to
+      determine how the view should behave when the component is resized.
+
+    */
+
+    /*
+
+      TO DO:
+
+      Put here the code to calculate new position and size of enclosed views. The
+      current (new) size of the component itself is passed in the parameter aSize.
+      For example:
+
+        SomeView.Bounds = rect( 10, 10, aSize.x - 20, aSize.y - 20 );
+
+    */
+  }
+
+  $rect <10,350,210,390>
+  inherited method UpdateViewState()
+  {
+    // Always invoke the inherited method.
+    super( aState );
+
+    /*
+
+      HINT 1:
+
+      This method is invoked automatically when the state set of the component has
+      been changed. The new state set can be found in the parameter aState.
+      Following are the important states:
+
+        Enabled   --> The component can react to user inputs.
+
+        Selected  --> The component is selected in context of its owner.
+
+        Focused   --> The component is selected in context of its owner and 
+                      the owner can react to keyboard events. In this manner the
+                      component is also able to react to keyboard events.
+
+        Modal     --> The component is modal. All events are redirected to this
+                      component.
+
+      To determine whether a state is currently active or not you have to test
+      the aState parameter. For example to test the 'Selected' state:
+
+        if ( aState.contains( Core::ViewState[ Selected ]))
+        {
+          ... yes, this component is currently selected.
+        }
+
+    */
+
+    /*
+
+      HINT 2:
+
+      Alternatively you can request this method invocation by executing explicitly
+      following code:
+
+
+        InvalidateViewState();
+
+    */
+      
+    /*
+
+      TO DO 1:
+
+      Put here the code to ensure that the visual aspect of the component does
+      reflect its current state. For example, depending on its 'Enabled' state
+      a component may appear with full colors or pale if it is disabled:
+
+        if ( aState.contains( Core::ViewState[ Enabled ]))
+        {
+          SomeBackgroundView.Opacity = 255;
+          SomeTextView.Color         = #000000FF;
+        }
+        else
+        {
+          SomeBackgroundView.Opacity = 128;
+          SomeTextView.Color         = #00000080;
+        }
+
+
+      TO DO 2:
+
+      You can evaluate here also the state of any other member in your component.
+      For example in a push-button component, the button should appear highlighted
+      as long as the user holds the finger within a touch area of the button:
+
+        if ( SomeTouchHandler.Down && SomeTouchHandler.Inside )
+          HighlightedBackground.Visible = true;
+        else
+          HighlightedBackground.Visible = false;
+
+      The touch handler itself only requests the update method to be called. Use
+      for this purpose 'InvalidateViewState()' method.
+
+
+      TO DO 3:
+
+      You can calculate here also the position/size of views accordingly to the
+      state of any other member in your component. For example in a slider you
+      can calculate the position of the slider knob from some properties like
+      'SliderValue' and 'SliderRange':
+
+        SliderKnob.Bounds.origin.x = ( SliderValue * Bounds.w ) / SliderRange;
+
+      Changing the 'SliderValue' or 'SliderRange' property should only request
+      the update method to be called. Use for this purpose 'InvalidateViewState()'
+      method.
+
+    */
+  }
+
+  // To do:
+  // 
+  // - Adjust the visible size of your component (the thick blue border).
+  // 
+  // - The simplest way to compose the appearance of the component is to use the \
+  // 'Views' and 'Widget Sets' from the Gallery.
+  // 
+  // - To react to touch or keyboard events use the templates from the Gallery folder \
+  // 'Event Handlers'.
+  // 
+  // - To perform transitions (animations) use the templates from the Gallery folder \
+  // 'Effects'.
+  // 
+  // - To implement the interface of the component use the 'Property' template from \
+  // the Gallery folder 'Chora'.
+  // 
+  // - To store values use the 'Variable' and 'Array' templates available in the \
+  // Gallery folder 'Chora'.
+  // 
+  // - To implement behavior use the 'Method' and 'Slot Method' templates available \
+  // in the Gallery folder 'Chora'.
+  // 
+  // - In the method 'UpdateViewState()' you can put code to update the state of \
+  // views enclosed in your component.
+  // 
+  // - In the method 'UpdateLayout()' you can put code to perform sophisticated layout \
+  // calculation for enclosed views.
+  note legend Note1
+  {
+    attr Bounds = <570,270,1350,590>;
+  }
+
+  // This is a filled rectangle view.
+  $rect <20,20,160,60>
+  object Views::Rectangle Background
+  {
+    preset Bounds = <0,0,480,272>;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton ListBtn
+  {
+    preset Bounds = <14,86,164,136>;
+    preset Label = "WiFi-list";
+    preset Appearance = WidgetSet::PushButton_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton SelectBtn
+  {
+    preset Bounds = <256,198,406,248>;
+    preset OnEnter = OnEnter;
+    preset Label = "Select";
+    preset Appearance = WidgetSet::PushButton_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text
+  {
+    preset Bounds = <5,28,174,58>;
+    preset String = "WiFi Module Test";
+    preset Font = Resources::FontMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Core::VerticalList VerticalList
+  {
+    preset Bounds = <211,30,451,166>;
+    preset OnLoadItem = OnLoadItem;
+    preset NoOfItems = 10;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Border Border
+  {
+    preset Bounds = <197,27,465,177>;
+  }
+
+  // This method is called by 'VerticalList' every time the list loads or updates \
+  // an item.
+  $rect <250,300,450,340>
+  slot OnLoadItem
+  {
+    /*
+
+      Hint:
+
+      - The code below demonstrates a simple usage of the list component.
+
+      - The list component creates and manages automatically view item instances of
+        the class specified in its property 'ItemClass'. In this example it is the
+        class 'Views::Text'.
+
+      - When you change the 'ItemClass' property you will also need to replace
+        accordingly all 'Views::Text' occurrences in the below code.
+
+      - You will also need to adapt the initialization of the 'itemView'.
+
+    */
+
+    // Get the number of the item to load. The list component takes care of the
+    // creation of the corresponding item view. Just access it ...
+    var int32       itemNo   = VerticalList.Item;
+    var Views::Text itemView = (Views::Text)VerticalList.View;
+
+    // The implementation of this slot method does not match the item class
+    // specified in the associated list component. Or the slot method is not
+    // called in context of the OnLoadItem list operation. 
+    if ( itemView == null )
+      return;
+
+    // Configure the item view ...
+    itemView.String = "Item #" + string( itemNo );
+    itemView.Font   = Resources::FontMedium;
+    itemView.Color  = #FFFFFFFF;
+
+    // Ensure that the item has correct size. The position of the item will be
+    // managed by the list component.
+    itemView.Bounds.size = point( VerticalList.Bounds.w, VerticalList.ItemHeight );
+  }
+
+  $rect <10,440,210,480>
+  slot OnEnter
+  {
+    //sender; /* the method is called from the sender object */
+
+    postsignal OnNext;
+
+  }
+
+  $reorder Note1 9
+  $reorder Background 9
+  $reorder ListBtn 9
+  $reorder SelectBtn 9
+  $reorder Text 9
+  $reorder VerticalList 9
+  $reorder Border 9
+  $reorder OnLoadItem 9
+}
+
+$rect <80,120,280,160>
+$output false
+class STEP2 : Application::Panel
+{
+  $rect <240,350,440,390>
+  inherited method Init()
+  {
+    // TO DO: Write your code here ... 
+
+    //GetRoot().VirtualKeyboard = VirtualKeyboardComponent;
+    //GetRoot().VirtualKeyboard = VKeyBoard;
+  }
+
+  $rect <20,300,220,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  // To do:
+  // 
+  // - Adjust the visible size of your component (the thick blue border).
+  // 
+  // - The simplest way to compose the appearance of the component is to use the \
+  // 'Views' and 'Widget Sets' from the Gallery.
+  // 
+  // - To react to touch or keyboard events use the templates from the Gallery folder \
+  // 'Event Handlers'.
+  // 
+  // - To perform transitions (animations) use the templates from the Gallery folder \
+  // 'Effects'.
+  // 
+  // - To implement the interface of the component use the 'Property' template from \
+  // the Gallery folder 'Chora'.
+  // 
+  // - To store values use the 'Variable' and 'Array' templates available in the \
+  // Gallery folder 'Chora'.
+  // 
+  // - To implement behavior use the 'Method' and 'Slot Method' templates available \
+  // in the Gallery folder 'Chora'.
+  // 
+  // - In the method 'UpdateViewState()' you can put code to update the state of \
+  // views enclosed in your component.
+  // 
+  // - In the method 'UpdateLayout()' you can put code to perform sophisticated layout \
+  // calculation for enclosed views.
+  note legend Note1
+  {
+    attr Bounds = <570,270,1350,590>;
+  }
+
+  // This is a filled rectangle view.
+  $rect <20,20,160,60>
+  object Views::Rectangle Background
+  {
+    preset Bounds = <0,0,480,272>;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton BackBtn
+  {
+    preset Bounds = <0,0,90,50>;
+    preset OnEnter = OnBackEnter;
+    preset Label = "Back";
+    preset Appearance = WidgetSet::PushButton_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton NextBtn
+  {
+    preset Bounds = <390,0,480,50>;
+    preset OnEnter = OnCheckEnter;
+    preset Label = "Check";
+    preset Appearance = WidgetSet::PushButton_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text PW_Font
+  {
+    preset Bounds = <73,57,157,87>;
+    preset String = "PW:";
+    preset Font = Resources::FontMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Status_Font
+  {
+    preset Bounds = <139,10,223,40>;
+    preset String = "Status:";
+    preset Font = Resources::FontMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Border Border
+  {
+    preset Bounds = <139,50,401,94>;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text PW_Input
+  {
+    preset Bounds = <145,57,395,87>;
+    preset String = "";
+    preset Font = Resources::FontMedium;
+  }
+
+  $rect <520,-10,710,30>
+  object Core::KeyPressHandler KeyHandler1
+  {
+    preset OnPress = OnPressKey1;
+    preset Filter = Core::KeyCode.CharacterKeys;
+    preset OnHold = OnPressKey1;
+  }
+
+  $rect <520,30,710,70>
+  slot OnPressKey1
+  {
+    // Append the received character at the end of the text
+    PW_Input.String = PW_Input.String + KeyHandler1.CharCode;
+    //trace "aa";
+    // If necessary scroll the text
+    //idlesignal AutoScrollText;
+  }
+
+  $rect <520,170,710,210>
+  object Core::KeyPressHandler KeyHandler2
+  {
+    preset OnPress = OnPressKey2;
+    preset Filter = Core::KeyCode.Clear;
+    preset OnHold = OnPressKey2;
+  }
+
+  $rect <520,210,710,250>
+  slot OnPressKey2
+  {
+    // Remove the last character from the text
+    PW_Input.String = PW_Input.String.left( PW_Input.String.length - 1 );
+    //InvalidateViewState();
+
+    // If necessary scroll the text
+    //idlesignal AutoScrollText;
+  }
+
+  $rect <20,400,220,440>
+  slot OnCheckEnter
+  {
+    //sender; /* the method is called from the sender object */
+
+    postsignal OnNext;
+
+  }
+
+  $rect <20,360,220,400>
+  slot OnBackEnter
+  {
+    //sender; /* the method is called from the sender object */
+
+    postsignal OnPrev;
+
+  }
+
+  $rect <20,20,160,60>
+  object Application::VirtualKeyboard VKeyBoard
+  {
+    preset Bounds = <6,103,476,273>;
+    preset OnPressKey = OnKeyAction;
+    preset OutputKey = ^Temp_String;
+  }
+
+  $rect <240,400,440,440>
+  property char Temp_String;
+
+  $rect <240,440,440,480>
+  onset Temp_String
+  {
+    // The value doesn't change - nothing to do.
+    if ( pure Temp_String == value )
+      return;
+
+    // Remember the property's new value.
+    pure Temp_String = value;
+
+    // TO DO:
+    // 
+    // Now you can handle the alternation of the property.
+  }
+
+  $rect <240,480,440,520>
+  onget Temp_String
+  {
+    return pure Temp_String;
+  }
+
+  $rect <24,460,214,500>
+  slot OnKeyAction
+  {
+    // Append the received character at the end of the text
+    //PW_Input.String = PW_Input.String + KeyHandler1.CharCode;
+    if(Temp_String == '\0')
+    {
+      PW_Input.String = PW_Input.String.left( PW_Input.String.length - 1 );
+    }
+    else
+    {
+      PW_Input.String = PW_Input.String + KeyHandler1.CharCode;
+    }
+    //trace "aa";
+    // If necessary scroll the text
+    //idlesignal AutoScrollText;
+  }
+
+  $reorder Note1 2
+  $reorder Background 2
+  $reorder BackBtn 2
+  $reorder NextBtn 2
+  $reorder PW_Font 2
+  $reorder Status_Font 2
+  $reorder Border 2
+  $reorder PW_Input 2
+  $reorder KeyHandler1 2
+  $reorder OnPressKey1 2
+  $reorder KeyHandler2 2
+  $reorder OnPressKey2 2
+  $reorder OnPrev 1
+}
+
+$rect <82,170,282,210>
+$output false
+class STEP3 : Application::Panel
+{
+  $rect <20,300,220,340>
+  inherited property Bounds = <0,0,480,272>;
+
+  $rect <10,390,210,430>
+  inherited method UpdateLayout()
+  {
+    // Always invoke the inherited method.
+    super( aSize );
+
+    /*
+
+      HINT:
+
+      This method exists for sophisticated layout calculation. Please note, that in 
+      most cases it is completely sufficient to use the views property 'Layout' to
+      determine how the view should behave when the component is resized.
+
+    */
+
+    /*
+
+      TO DO:
+
+      Put here the code to calculate new position and size of enclosed views. The
+      current (new) size of the component itself is passed in the parameter aSize.
+      For example:
+
+        SomeView.Bounds = rect( 10, 10, aSize.x - 20, aSize.y - 20 );
+
+    */
+  }
+
+  $rect <10,350,210,390>
+  inherited method UpdateViewState()
+  {
+    // Always invoke the inherited method.
+    super( aState );
+
+    /*
+
+      HINT 1:
+
+      This method is invoked automatically when the state set of the component has
+      been changed. The new state set can be found in the parameter aState.
+      Following are the important states:
+
+        Enabled   --> The component can react to user inputs.
+
+        Selected  --> The component is selected in context of its owner.
+
+        Focused   --> The component is selected in context of its owner and 
+                      the owner can react to keyboard events. In this manner the
+                      component is also able to react to keyboard events.
+
+        Modal     --> The component is modal. All events are redirected to this
+                      component.
+
+      To determine whether a state is currently active or not you have to test
+      the aState parameter. For example to test the 'Selected' state:
+
+        if ( aState.contains( Core::ViewState[ Selected ]))
+        {
+          ... yes, this component is currently selected.
+        }
+
+    */
+
+    /*
+
+      HINT 2:
+
+      Alternatively you can request this method invocation by executing explicitly
+      following code:
+
+
+        InvalidateViewState();
+
+    */
+      
+    /*
+
+      TO DO 1:
+
+      Put here the code to ensure that the visual aspect of the component does
+      reflect its current state. For example, depending on its 'Enabled' state
+      a component may appear with full colors or pale if it is disabled:
+
+        if ( aState.contains( Core::ViewState[ Enabled ]))
+        {
+          SomeBackgroundView.Opacity = 255;
+          SomeTextView.Color         = #000000FF;
+        }
+        else
+        {
+          SomeBackgroundView.Opacity = 128;
+          SomeTextView.Color         = #00000080;
+        }
+
+
+      TO DO 2:
+
+      You can evaluate here also the state of any other member in your component.
+      For example in a push-button component, the button should appear highlighted
+      as long as the user holds the finger within a touch area of the button:
+
+        if ( SomeTouchHandler.Down && SomeTouchHandler.Inside )
+          HighlightedBackground.Visible = true;
+        else
+          HighlightedBackground.Visible = false;
+
+      The touch handler itself only requests the update method to be called. Use
+      for this purpose 'InvalidateViewState()' method.
+
+
+      TO DO 3:
+
+      You can calculate here also the position/size of views accordingly to the
+      state of any other member in your component. For example in a slider you
+      can calculate the position of the slider knob from some properties like
+      'SliderValue' and 'SliderRange':
+
+        SliderKnob.Bounds.origin.x = ( SliderValue * Bounds.w ) / SliderRange;
+
+      Changing the 'SliderValue' or 'SliderRange' property should only request
+      the update method to be called. Use for this purpose 'InvalidateViewState()'
+      method.
+
+    */
+  }
+
+  // To do:
+  // 
+  // - Adjust the visible size of your component (the thick blue border).
+  // 
+  // - The simplest way to compose the appearance of the component is to use the \
+  // 'Views' and 'Widget Sets' from the Gallery.
+  // 
+  // - To react to touch or keyboard events use the templates from the Gallery folder \
+  // 'Event Handlers'.
+  // 
+  // - To perform transitions (animations) use the templates from the Gallery folder \
+  // 'Effects'.
+  // 
+  // - To implement the interface of the component use the 'Property' template from \
+  // the Gallery folder 'Chora'.
+  // 
+  // - To store values use the 'Variable' and 'Array' templates available in the \
+  // Gallery folder 'Chora'.
+  // 
+  // - To implement behavior use the 'Method' and 'Slot Method' templates available \
+  // in the Gallery folder 'Chora'.
+  // 
+  // - In the method 'UpdateViewState()' you can put code to update the state of \
+  // views enclosed in your component.
+  // 
+  // - In the method 'UpdateLayout()' you can put code to perform sophisticated layout \
+  // calculation for enclosed views.
+  note legend Note1
+  {
+    attr Bounds = <570,270,1350,590>;
+  }
+
+  // This is a filled rectangle view.
+  $rect <20,20,160,60>
+  object Views::Rectangle Background
+  {
+    preset Bounds = <0,0,480,272>;
+    preset Color = #000000FF;
+  }
+
+  $rect <20,20,160,60>
+  object WidgetSet::PushButton PushButton
+  {
+    preset Bounds = <14,198,164,248>;
+    preset OnEnter = OnEnter;
+    preset Label = "Back";
+    preset Appearance = WidgetSet::PushButton_Medium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text
+  {
+    preset Bounds = <71,92,316,122>;
+    preset String = "WiFi Module Conn Status:";
+    preset Font = Resources::FontMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Rectangle Rectangle
+  {
+    preset Bounds = <316,89,355,125>;
+  }
+
+  $rect <10,440,210,480>
+  slot OnEnter
+  {
+    //sender; /* the method is called from the sender object */
+
+    postsignal OnPrev;
+
+  }
+
+  $reorder Note1 2
+  $reorder Background 2
+  $reorder PushButton 2
+  $reorder Text 2
+  $reorder Rectangle 2
+}
+
+// This is a sample for a virtual keyboard.
+$rect <290,120,480,160>
+$output false
+class VirtualKeyboard : Core::Group
+{
+  $rect <410,290,610,330>
+  inherited method Init()
+  {
+    // Load the default layout at the initialization time
+    loadLayoutFromString( LayoutShiftOff );
+  }
+
+  $rect <210,450,410,490>
+  inherited property Bounds = <0,0,470,170>;
+
+  // This variable refers to the frame view of the currently touched key.
+  $rect <10,290,210,330>
+  var Views::Frame currentKeyFrame;
+
+  // This variable refers to the text view of the currently touched key.
+  $rect <10,330,210,370>
+  var Views::Text currentKeyText;
+
+  // This variable refers to the image view of the currently touched key.
+  $rect <10,370,210,410>
+  var Views::Image currentKeyImage;
+
+  // This variable stores the current state of the shift lock key.
+  $rect <10,410,210,450>
+  var bool shiftLock;
+
+  // This variable stores the current state of the caps shift lock key.
+  $rect <10,450,210,490>
+  var bool capsLock;
+
+  // In case of multi-touch screens stores the number of the last pressed finger.
+  $rect <10,490,210,530>
+  var int32 currentFinger;
+
+  // Does the user's finger currently lie inside a button area?
+  $rect <210,490,410,530>
+  var bool wasInside;
+
+  // Does the user dragging the keyboard panel?
+  $rect <410,490,610,530>
+  var bool dragging;
+
+  // This method loads new keyboard layout. The layout is determined by the passed \
+  // string parameter aLayoutString. The characters within the string correspond \
+  // to the keys accordingly their order.
+  $rect <410,330,610,370>
+  method void loadLayoutFromString( arg string aLayoutString )
+  {
+    var Core::View view  = FindNextView( null, Core::ViewState[]);
+    var int32      keyNo = 0;
+
+    // Traverse the entire list of views available within the keyboard component
+    while ( view != null )
+    {
+      var Views::Text keyText = (Views::Text)view;
+
+      // Text view found? 
+      if ( keyText != null )
+      {
+        // Then from the lyout string get the next character for the key
+        var string s = aLayoutString[ keyNo ];
+
+        // Note, for text views, percent signs are special control signs. To get 
+        // the percent visible, two percent signs should be used.
+        if (( s == "%" ) || ( s == "^" ) || ( s == "~" ))
+          s = '%' + s;
+
+        // Initialize the key
+        keyText.String = s;
+        keyNo = keyNo + 1;
+      }
+
+      // Search for next view
+      view = FindNextView( view, Core::ViewState[]);
+    }
+  }
+
+  // This slot method is connected to the SimpleTouchHandler. It will be invoked, \
+  // when the user has touched the keyboard area.
+  $rect <210,290,410,330>
+  slot onPress
+  {
+    // No text input while the panel is dragged
+    if ( dragging )
+      return;
+
+    // First at all, which views do lie at the touched screen position?
+    var point      pos   = SimpleTouchHandler.CurrentPos;
+    var Core::View view1 = FindViewAtPosition( null,  pos, Core::ViewState[]);
+    var Core::View view2 = FindViewAtPosition( view1, pos, Core::ViewState[]);
+
+    // Determine the 'key' views affected by the touch.
+    // Note, some keys show text, other in contrast, an image. 
+    var Views::Text  newKeyText  = (Views::Text)view1;
+    var Views::Image newKeyImage = (Views::Image)view1;
+    var Views::Frame newKeyFrame = (Views::Frame)view1;
+
+    if ( newKeyFrame == null )
+      newKeyFrame = (Views::Frame)view2;
+
+    // No key pressed by the user
+    if (( newKeyFrame == null ) && ( currentKeyFrame != null ))
+      return;
+
+    // Remember the finger which initiated the interaction
+    currentFinger = SimpleTouchHandler.Finger;
+
+    // Has the user pressed a new key while holding another one pressed? Force the
+    // pressed key to be released first.
+    if (( newKeyFrame != null ) && ( currentKeyFrame != null ))
+      signal onRelease;
+
+    // This is the new key the user interacts with and the finger with it the
+    // interaction began.
+    currentKeyText  = newKeyText;
+    currentKeyImage = newKeyImage;
+    currentKeyFrame = newKeyFrame;
+
+    // The user has touched the background of the keyboard. In this manner
+    // the entire keyboard can be moved by dragging it with 'the finger'.
+    // For optimization purpose, switch on the buffering of the keyboard
+    // aspect
+    if ( currentKeyFrame == null )
+    {
+      Buffered = true;
+      dragging = true;
+    }
+
+    signal onDrag;
+  }
+
+  // This slot method is connected to the SimpleTouchHandler. It will be invoked, \
+  // when the user has dragged the finger after touching the keyboard area.
+  $rect <210,330,410,370>
+  slot onDrag
+  {
+    // React to the movement of the last pressed finger only
+    if ( currentFinger != SimpleTouchHandler.Finger )
+      return;
+
+    // Dragging of the entire keyboard component?
+    if ( dragging )
+    {
+      MoveView( SimpleTouchHandler.Offset, false );
+      return;
+    }
+
+    // React to the movement of the last pressed finger only
+    if ( currentKeyFrame == null )
+      return;
+
+    // Does the user still 'press' the key?
+    wasInside = currentKeyFrame.Bounds == SimpleTouchHandler.CurrentPos;
+
+    // Accordingly the aspect of the button is updated.
+    if ( wasInside )
+      currentKeyFrame.FrameNumber = 0;
+    else
+      currentKeyFrame.FrameNumber = 2;
+  }
+
+  // This slot method is connected to the SimpleTouchHandler. It will be invoked, \
+  // when the user has finished the touch screen interaction.
+  $rect <210,370,410,410>
+  slot onRelease
+  {
+    // React to the movement of the last pressed finger only
+    if ( currentFinger != SimpleTouchHandler.Finger )
+      return;
+
+    // Terminate the dragging of the entire keyboard component?
+    if ( dragging )
+    {
+      Buffered = false;
+      dragging = false;
+      return;
+    }
+
+    // The touch event is not associated with any button
+    if ( currentKeyFrame == null )
+      return;
+
+    // First at all, restore the default state of the previously pressed key.
+    currentKeyFrame.FrameNumber = 2;
+
+    // Ignore the key, if the user has dragged the finger outside the key area.
+    // Otherwise evaluate the affected key, update the keyboard layout and send
+    // keyboard events to the application
+    if ( wasInside )
+    {
+      // Depending on the pressed key, the following variables will be
+      // initialized with the corresponding code.
+      var char          charCode       = '\0';
+      var Core::KeyCode keyCode        = Core::KeyCode.NoKey;
+      var bool          shiftWasLocked = capsLock || shiftLock;
+
+      // Has the user pressed the left/right shift lock key?
+      if (( currentKeyFrame == FrameShiftLeft  ) ||
+          ( currentKeyFrame == FrameShiftRight ))
+      {
+        shiftLock = !shiftLock;
+        capsLock  = false;
+      }
+
+      // Has the user pressed the caps shift lock key?
+      else if ( currentKeyFrame == FrameCapsLock  )
+      {
+        capsLock  = !capsLock;
+        shiftLock = false;
+      }
+
+      // Has the user pressed the Backspace key?
+      else if ( currentKeyFrame == FrameBackspace )
+        keyCode = Core::KeyCode.Clear;
+
+      // Has the user pressed the Tabulator key?
+      else if ( currentKeyFrame == FrameTab )
+        keyCode = Core::KeyCode.Tab;
+
+      // Has the user pressed the Return key?
+      else if ( currentKeyFrame == FrameReturn )
+        keyCode = Core::KeyCode.Enter;
+
+      // An ordinary key has been pressed.
+      else
+      {
+        if ( currentKeyText.String[0] != '%' )
+          charCode = currentKeyText.String[0];
+        else
+          charCode = currentKeyText.String[1];
+      }
+
+      // Feed the just prepared keyboard event to the application
+      if (( keyCode != Core::KeyCode.NoKey ) || ( charCode != '\0' ))
+      {
+        GetRoot().DriveKeyboardHitting( keyCode, charCode, true );
+        GetRoot().DriveKeyboardHitting( keyCode, charCode, false );
+
+        // In contrast to the caps shift lock, the ordinary shift lock is valid for
+        // one key pressure only. Restore the lock.
+        shiftLock = false;
+      }
+
+      // At fin, update the state of the shift lock keys and ...
+      if ( capsLock )  FrameCapsLock.FrameNumber = 0;
+      else             FrameCapsLock.FrameNumber = 2;
+      if ( shiftLock ) FrameShiftLeft.FrameNumber = 0;
+      else             FrameShiftLeft.FrameNumber = 2;
+      FrameShiftRight.FrameNumber = FrameShiftLeft.FrameNumber;
+
+      // ... update the keyboard layout if the state of the shift keys has changed
+      if ( shiftWasLocked != ( capsLock || shiftLock ))
+        if ( shiftWasLocked )
+          loadLayoutFromString( LayoutShiftOff );
+        else
+          loadLayoutFromString( LayoutShiftOn );
+
+          
+      OutputKey^ = charCode;
+    }
+
+    // The interaction is finished
+    currentKeyFrame = null;
+    currentKeyText  = null;
+    currentKeyImage = null;
+
+    postsignal OnPressKey;
+  }
+
+  // This string variable stores the keyboard layout for the case, there is no shift \
+  // key pressed. Each character within this string does correspond to one key on \
+  // the keyboard. By modifying this variable, the layout is changed.
+  $rect <10,190,210,230>
+  var string LayoutShiftOff = "1234567890ßqwertzuiopü+asdfghjklöä#<yxcvbnm,.- ";
+
+  // This string variable stores the keyboard layout for the case, there is a shift \
+  // key pressed. Each character within this string does correspond to one key on \
+  // the keyboard. By modifying this variable, the layout is changed.
+  $rect <10,230,210,270>
+  var string LayoutShiftOn = "!\"§$$%&/()=?QWERTZUIOPÜ*ASDFGHJKLÖÄ\'>YXCVBNM;:_ ";
+
+  $rect <20,20,160,60>
+  object Views::Rectangle Background
+  {
+    preset Layout = Core::Layout[AlignToBottom, AlignToLeft, AlignToRight, AlignToTop, ResizeHorz, ResizeVert];
+    preset Bounds = <0,0,470,170>;
+    preset Color = #00000040;
+  }
+
+  $rect <20,20,160,60>
+  object Core::SimpleTouchHandler SimpleTouchHandler
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Point4 = <10,160>;
+    preset Point3 = <460,160>;
+    preset Point2 = <460,10>;
+    preset Point1 = <10,9>;
+    preset OnDrag = onDrag;
+    preset OnRelease = onRelease;
+    preset OnPress = onPress;
+    preset EnableMultiTouch = true;
+    preset MaxStrikeCount = 100;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame01
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <40,10,70,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame02
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <70,10,100,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame03
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <100,10,130,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame04
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <130,10,160,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame05
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <160,10,190,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame06
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <190,10,220,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame07
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <220,10,250,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame08
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <250,10,280,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame09
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <280,10,310,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame10
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <310,10,340,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame11
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <340,10,370,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame12
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <50,40,80,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame13
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <80,40,110,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame14
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <110,40,140,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame15
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <140,40,170,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame16
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <170,40,200,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame17
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <200,40,230,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame18
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <230,40,260,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame19
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <260,40,290,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame20
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <290,40,320,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame21
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <320,40,350,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame22
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <350,40,380,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame23
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <380,40,410,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame24
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <60,70,90,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame25
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <90,70,120,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame26
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <120,70,150,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame27
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <150,70,180,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame28
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <180,70,210,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame29
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <210,70,240,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame30
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <240,70,270,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame31
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <270,70,300,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame32
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <300,70,330,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame33
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <330,70,360,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame34
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <360,70,390,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame35
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <390,70,420,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame36
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <50,100,80,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame37
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <80,100,110,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame38
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <110,100,140,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame39
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <140,100,170,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame40
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <170,100,200,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame41
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <200,100,230,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame42
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <230,100,260,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame43
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <260,100,290,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame44
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <290,100,320,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame45
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <320,100,350,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame46
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <350,100,380,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame Frame47
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <130,130,330,160>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameTab
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,40,50,70>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameCapsLock
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,70,60,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameShiftLeft
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,100,50,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameBackspace
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <400,10,460,40>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameReturn
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <420,40,460,100>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Frame FrameShiftRight
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <380,100,460,130>;
+    preset FrameNumber = 2;
+    preset Bitmap = Application::FlatButtonFrame;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text01
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <40,10,70,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text02
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <70,10,100,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text03
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <100,10,130,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text04
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <130,10,160,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text05
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <160,10,190,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text06
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <190,10,220,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text07
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <220,10,250,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text08
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <250,10,280,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text09
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <280,10,310,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text10
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <310,10,340,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text11
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <340,10,370,40>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text12
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <50,40,80,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text13
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <80,40,110,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text14
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <110,40,140,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text15
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <140,40,170,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text16
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <170,40,200,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text17
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <200,40,230,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text18
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <230,40,260,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text19
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <260,40,290,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text20
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <290,40,320,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text21
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <320,40,350,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text22
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <350,40,380,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text23
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <380,40,410,70>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text24
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <60,70,90,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text25
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <90,70,120,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text26
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <120,70,150,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text27
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <150,70,180,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text28
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <180,70,210,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text29
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <210,70,240,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text30
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <240,70,270,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text31
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <270,70,300,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text32
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <300,70,330,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text33
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <330,70,360,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text34
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <360,70,390,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text35
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <390,70,420,100>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text36
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <50,100,80,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text37
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <80,100,110,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text38
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <110,100,140,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text39
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <140,100,170,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text40
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <170,100,200,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text41
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <200,100,230,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text42
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <230,100,260,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text43
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <260,100,290,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text44
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <290,100,320,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text45
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <320,100,350,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text46
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <350,100,380,130>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Text Text47
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <130,130,330,160>;
+    preset String = "X";
+    preset Font = Resources::FontMedium;
+    preset Color = #444444FF;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageTab
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,40,50,70>;
+    preset Color = #444444FF;
+    preset FrameNumber = 5;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageCapsLock
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,70,60,100>;
+    preset Color = #444444FF;
+    preset FrameNumber = 3;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageShiftLeft
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <10,100,50,130>;
+    preset Color = #444444FF;
+    preset FrameNumber = 2;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageBackspace
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <400,10,460,40>;
+    preset Color = #444444FF;
+    preset FrameNumber = 4;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageReturn
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <420,40,460,100>;
+    preset Color = #444444FF;
+    preset FrameNumber = 6;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  $rect <20,20,160,60>
+  object Views::Image ImageShiftRight
+  {
+    preset Layout = Core::Layout[ResizeHorz, ResizeVert];
+    preset Bounds = <380,100,460,130>;
+    preset Color = #444444FF;
+    preset FrameNumber = 2;
+    preset Bitmap = Resources::KeyIconsMedium;
+  }
+
+  // This is the virtual keyboard, a simple alphanumeric virtual keyboard component. \
+  // It provides a grid with keys the user can touch. Activating a key feeds the \
+  // corresponding event to the application as if the user had pressed the key on \
+  // a real keyboard.
+  note legend Note
+  {
+    attr Bounds = <10,540,610,640>;
+  }
+
+  $rect <410,400,610,440>
+  property slot OnPressKey;
+
+  $rect <410,440,610,480>
+  property ^char OutputKey = null;
+
+  $reorder currentKeyFrame 2
+  $reorder currentKeyText 2
+  $reorder currentKeyImage 2
+  $reorder shiftLock 2
+  $reorder capsLock 2
+  $reorder currentFinger 2
+  $reorder wasInside 2
+  $reorder dragging 2
+  $reorder loadLayoutFromString 2
+  $reorder onPress 2
+  $reorder onDrag 2
+  $reorder onRelease 2
+  $reorder LayoutShiftOff 2
+  $reorder LayoutShiftOn 2
+}
+
+$rect <410,170,610,210>
+$output false
+resource Resources::Bitmap FlatButtonFrame
+{
+  attr bitmapfile FileName = .\Res\FlatButtonFrame.png;
+  attr framesize FrameSize = <45,45>;
+  attr framedelay FrameDelay;
+  attr bitmapformat Format = Native;
+  attr bitmapdithering Dithering = Auto;
+  attr bitmapmode Mode = Default;
+}
+
+$rect <310,70,510,110>
+$output false
+class Panel : Core::Group
+{
+  $rect <0,310,200,350>
+  inherited property Bounds = <0,0,480,272>;
+
+  $rect <230,355,430,395>
+  property slot OnNext;
+
+  $rect <230,310,430,350>
+  property slot OnPrev;
+}

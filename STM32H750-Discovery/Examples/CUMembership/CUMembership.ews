@@ -1,0 +1,118 @@
+$version 1.0
+
+attr active = Application::STEP2;
+attr callStackMonitor_Show = false;
+attr codeColSelect = false;
+attr codeFirstPos = <0,0>;
+attr codeInspector = Application::STEP2.OnKeyAction;
+attr codeSelEnd = <49,8>;
+attr codeSelStart = <49,8>;
+attr connectInspectors = false;
+attr debug_TrackUpdates = false;
+attr extractDoc_ClassOverview = true;
+attr extractDoc_DeleteOldFiles = false;
+attr extractDoc_Destination = ./HtmlDoc;
+attr extractDoc_IgnoreAccessors = true;
+attr extractDoc_IgnoreMembers = true;
+attr extractDoc_Navigation = true;
+attr extractDoc_Profiles = false;
+attr extractDoc_Title = Documentation;
+attr extractDoc_Variants = false;
+attr generateClut_ReservedColors = 0;
+attr heapMonitor_Show = false;
+attr language = Default;
+attr profile = STM32F750;
+attr profilerMonitor_Show = false;
+attr search_CaseSensitive = false;
+attr search_IgnoreDescription = false;
+attr search_IgnoreMosaic = false;
+attr search_LimitToComposer = false;
+attr search_WholeWords = false;
+attr search_WildCards = false;
+
+view Project
+{
+  attr enableGrid = true;
+  attr enableWireMode = false;
+  attr grid = 10;
+  attr scrollTo = <-7,-7>;
+  attr zoom = 1.0;
+}
+
+view unit Application
+{
+  attr enableGrid = true;
+  attr enableWireMode = false;
+  attr grid = 10;
+  attr scrollTo = <-7,-151>;
+  attr zoom = 1.0;
+}
+
+view class Application::Application
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,39>;
+  attr codeInspector = STEPControl;
+  attr codeSelEnd = <4,46>;
+  attr codeSelStart = <4,46>;
+  attr enableGrid = true;
+  attr enableWireMode = false;
+  attr grid = 10;
+  attr scrollTo = <-11,-2>;
+  attr zoom = 1.0;
+}
+
+view class Application::STEP1
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeInspector = OnEnter;
+  attr codeSelEnd = <0,2>;
+  attr codeSelStart = <18,2>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,89>;
+  attr zoom = 1.0;
+}
+
+view class Application::STEP2
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeInspector = OnKeyAction;
+  attr codeSelEnd = <49,8>;
+  attr codeSelStart = <49,8>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,130>;
+  attr zoom = 1.0;
+}
+
+view class Application::STEP3
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,0>;
+  attr codeInspector = OnEnter;
+  attr codeSelEnd = <17,2>;
+  attr codeSelStart = <17,2>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,89>;
+  attr zoom = 1.0;
+}
+
+view class Application::Panel
+{
+  attr enableWireMode = false;
+  attr scrollTo = <-7,-55>;
+  attr zoom = 1.0;
+}
+
+view class Application::VirtualKeyboard
+{
+  attr codeColSelect = false;
+  attr codeFirstPos = <0,73>;
+  attr codeInspector = onRelease;
+  attr codeSelEnd = <11,92>;
+  attr codeSelStart = <2,92>;
+  attr enableWireMode = false;
+  attr scrollTo = <-7,233>;
+  attr zoom = 1.0;
+}

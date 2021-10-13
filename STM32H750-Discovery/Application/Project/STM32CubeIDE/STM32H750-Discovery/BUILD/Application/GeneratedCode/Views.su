@@ -1,0 +1,17 @@
+Views.c:318:6:ViewsText_preOnUpdateSlot	0	static
+Views.c:42:6:ViewsRectangle__Init	8	static
+Views.c:155:6:ViewsText__Init	8	static
+Views.c:58:6:ViewsRectangle__ReInit	0	static
+Views.c:170:6:ViewsText__ReInit	0	static
+Views.c:65:6:ViewsRectangle__Done	0	static
+Views.c:177:6:ViewsText__Done	0	static
+Views.c:99:6:ViewsRectangle_Draw	112	static
+Views.c:308:6:ViewsText_OnSetBounds	40	static
+Views.c:326:6:ViewsText_preReparseSlot	24	static
+Views.c:335:6:ViewsText_reparseSlot	32	static
+Views.c:126:6:ViewsRectangle_OnSetColor	24	static
+Views.c:190:6:ViewsText_Done	0	static
+Views.c:371:6:ViewsText_OnSetString	24	static
+Views.c:383:6:ViewsText_OnSetFont	24	static
+Views.c:399:7:ViewsText_GetContentArea	128	static
+Views.c:221:6:ViewsText_Draw	232	static

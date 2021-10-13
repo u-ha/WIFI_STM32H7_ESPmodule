@@ -1,0 +1,27 @@
+C:\STM32\STM32H750-Discovery\Application\Project\EWARM\STM32H750-Discovery\BrowseInfo\Application\DeviceDriver.pbi: \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreQuadView.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreSimpleTouchHandler.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreKeyPressHandler.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_WidgetSetPushButton.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_ViewsText.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_ViewsRectangle.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreTimer.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreView.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreRectView.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreGroup.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_CoreRoot.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\_ApplicationApplication.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewgfxcore.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewextfnt.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewextbmp.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewgfxdefs.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewextgfx.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewgfxdriver.h \
+  C:\STM32\STM32H750-Discovery\Application\Source\ewconfig.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\EmWiGfxInclude\ewgfx.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\GeneratedCode\Application.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\TargetSpecific\ew_bsp_clock.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\TargetSpecific\ew_bsp_inout.h \
+  C:\STM32\STM32H750-Discovery\Application\Source\ewdef.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\PlatformPackage\RTE\ewrte.h \
+  C:\STM32\STM32H750-Discovery\Application\Source\DeviceDriver.c

@@ -1,0 +1,28 @@
+C:\STM32\STM32H750-Discovery\Application\Project\EWARM\STM32H750-Discovery\BrowseInfo\FreeRTOS\queue.pbi: \
+  C:\STM32\STM32H750-Discovery\ThirdParty\STM32Cube_FW_H7\Middlewares\Third_Party\FreeRTOS\Source\queue.c \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ycheck.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\yvals.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Defaults.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Config_Normal.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\ysizet.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_stdlib.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\string.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\DLib_Product_string.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stddef.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\stdint.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\Source\FreeRTOSConfig.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\projdefs.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\portable.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\deprecated_definitions.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\portable\IAR\ARM_CM7\r0p1\portmacro.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\aarch32\intrinsics.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\aarch32\iccarm_builtin.h \
+  C:\Program\ Files\IAR\ Systems\Embedded\ Workbench\ 9.0\arm\inc\c\aarch32\iar_intrinsics_common.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\mpu_wrappers.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\task.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\list.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\queue.h \
+  C:\STM32\STM32H750-Discovery\Application\Project\EWARM\..\..\..\ThirdParty\STM32Cube_FW_H7\MiddleWares\Third_Party\FreeRTOS\Source\include\task.h

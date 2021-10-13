@@ -1,0 +1,3 @@
+Application.c:49:6:ApplicationApplication__Init	40	static
+Application.c:76:6:ApplicationApplication__ReInit	8	static
+Application.c:87:6:ApplicationApplication__Done	8	static

@@ -1,0 +1,3 @@
+ew_bsp_touch.c:104:5:EwBspTouchInit	48	static
+ew_bsp_touch.c:176:6:EwBspTouchDone	0	static
+ew_bsp_touch.c:200:5:EwBspTouchGetEvents	192	static

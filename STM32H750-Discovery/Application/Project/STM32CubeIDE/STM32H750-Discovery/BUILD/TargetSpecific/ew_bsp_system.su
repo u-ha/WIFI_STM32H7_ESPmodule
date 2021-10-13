@@ -1,0 +1,3 @@
+ew_bsp_system.c:74:13:SystemClock_Config	336	static
+ew_bsp_system.c:256:6:EwBspSystemInit	40	static,ignoring_inline_asm
+ew_bsp_system.c:292:6:EwBspSystemDone	0	static
